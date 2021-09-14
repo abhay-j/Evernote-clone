@@ -11,15 +11,13 @@ body {
   height: 100%;
   box-sizing: border-box;
 }
-.app-container {
+/* .app-container {
   height: 100%;
   box-sizing: border-box;
-}
+} */
 .quill {
   height: 100%;
   box-sizing: border-box;
-  width: calc(100% - 300px);
-  float: left;
 }
 .ql-container {
   box-sizing: border-box;
@@ -29,7 +27,7 @@ body {
 .ql-editor {
   cursor: text;
 }
-.MuiListItem-root.Mui-selected {
+/* .MuiListItem-root.Mui-selected {
   background-color: #d4d8e8 !important;
 }
 .no-note-selected {
@@ -37,4 +35,4 @@ body {
   position: absolute;
   top: 50px;
   left: calc(50% - 165px);
-}
+}  */

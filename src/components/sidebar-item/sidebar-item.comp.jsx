@@ -1,51 +1,64 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "./styles";
+import { makeStyles } from "@material-ui/styles";
+// import styles from "./styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { removeHTMLTags } from "../../helpers";
-import { List } from "@material-ui/core";
+import { Note } from "@material-ui/icons";
 
-class SidebarItem extends React.Component {
-  render() {
-    const { _note, classes, _index, selectedNoteIndex } = this.props;
-    return (
-      <div key={_index}>
-        <ListItem
-          className={classes.listItem}
-          selected={selectedNoteIndex === _index}
-          alignItems="flex-start"
-        >
-          <div
-            className={classes.textSection}
-            onClick={() => this.selectNote(_note, _index)}
-          >
-            <ListItemText
-              primary={_note.title}
-              secondary={removeHTMLTags(_note.body.substring(0, 30)) + "..."}
-            ></ListItemText>
-          </div>
-          <DeleteIcon
-            className={classes.deleteIcon}
-            onClick={() => this.deleteNote(_note)}
-          ></DeleteIcon>
-        </ListItem>
-      </div>
-    );
-  }
-  selectNote = (n, i) => {
-    this.props.selectNote(n, i);
+const useStyles = makeStyles({
+  listItem: {
+    cursor: "pointer",
+  },
+
+  deleteIcon: {
+    position: "absolute",
+    right: "0",
+    top: "5px",
+    "&:hover": {
+      color: "red",
+    },
+  },
+  wrapper: {
+    width: "100%",
+  },
+});
+
+const SidebarItem = ({
+  _note,
+  _index,
+  selectedNoteIndex,
+  selectNote,
+  deleteNote,
+}) => {
+  const classes = useStyles();
+  const handleSelect = () => {
+    selectNote(_note, _index);
   };
-  deleteNote = (n) => {
-    if (
-      window.confirm(`Are you sure you want to delete ${n.title} from database`)
-    ) {
-      this.props.deleteNote(n);
-    } else {
-      return;
+  const handleDelete = () => {
+    if (window.confirm(`are you sure you want to delete`)) {
+      deleteNote(_index);
     }
   };
-}
-
-export default withStyles(styles)(SidebarItem);
+  return (
+    <div className={classes.wrapper} key={_index}>
+      <ListItem
+        className={classes.listItem}
+        selected={selectedNoteIndex === _index}
+      >
+        <div onClick={handleSelect}>
+          <ListItemText
+            primary={_note.title}
+            secondary={removeHTMLTags(_note.body.substring(0, 30)) + "..."}
+          ></ListItemText>
+        </div>
+        <DeleteIcon
+          className={classes.deleteIcon}
+          onClick={handleDelete}
+        ></DeleteIcon>
+      </ListItem>
+    </div>
+  );
+};
+export default SidebarItem;

@@ -1,39 +1,65 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactQuill from "react-quill";
 import debounce from "../../helpers";
-import BorderColorIcon from "@material-ui/icons/BorderColor";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "./styles";
 
-class Editor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: "",
-      title: "",
-      id: "",
-    };
-  }
-  render() {
-    const { classes } = this.props;
+import { makeStyles } from "@material-ui/core";
+import { TimeToLeave } from "@material-ui/icons";
+//
+const useStyles = makeStyles({
+  editorContainer: {
+    width: "100%",
+    height: "100%",
+  },
+});
+const Editor = ({ selectedNote, selectedNoteIndex, notes, noteUpdate }) => {
+  const classes = useStyles();
+  const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
+  const [id, setId] = useState("");
 
-    return (
-      <div className={classes.editorContainer}>
-        <ReactQuill
-          value={this.state.text}
-          onChange={this.updateBody}
-        ></ReactQuill>
-      </div>
-    );
-  }
-  updateBody = async (val) => {
-    await this.setState({ text: val });
-    this.update();
+  useEffect(() => {
+    setText(selectedNote.body);
+    setTitle(selectedNote.title);
+    setId(selectedNote.id);
+  }, [selectedNote]);
+
+  const updateBody = async (val) => {
+    await setText(val);
+
+    update();
   };
-  update = debounce(() => {
-    console.log("update database");
-    //comeback later
-  }, 1500);
-}
 
-export default withStyles(styles)(Editor);
+  // const update = useRef(
+  //   debounce(() => {
+  //     console.log("updating database!");
+  //     // const noteObj = {
+  //     //   title: title,
+  //     //   body: text,
+  //     // };
+  //     noteUpdate(id, title, text);
+  //   }, 1500)
+  // ).current;
+
+  // const update = debounce(() => {
+  //   // comeback later
+  //   console.log("updating database!");
+
+  //   noteUpdate(id, title, text);
+  // }, 1500);
+  const update = () => {
+    // comeback later
+    console.log("updating database!");
+    try {
+      noteUpdate(id, title, text);
+    } catch (error) {
+      console.log("this is the error", error);
+    }
+  };
+
+  return (
+    <div className={classes.editorContainer}>
+      <ReactQuill value={text} onChange={updateBody}></ReactQuill>
+    </div>
+  );
+};
+export default Editor;

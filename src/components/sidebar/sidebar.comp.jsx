@@ -1,71 +1,164 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "./styles";
+import React, { useState } from "react";
+
 import List from "@material-ui/core/List";
 import { Divider, Button } from "@material-ui/core";
-// import SidebarItemComponent from '../sidebaritem/sidebarItem';
-import SidebarItem from "../sidebar-item/sidebar-item.comp";
-class Sidebar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      addingNote: false,
-      title: null,
-    };
-  }
-  render() {
-    const { selectedNoteIndex, notes, classes } = this.props;
-    return (
-      <div className={classes.sidebarContainer}>
-        <Button onClick={this.newNoteBtnClick} className={classes.newNoteBtn}>
-          {this.state.addingNote ? "cancel" : "New Note"}
-        </Button>
-        {this.state.addingNote ? (
-          <div>
-            <input
-              type="text"
-              className={classes.newNoteInput}
-              placeholder="Enter note title"
-              onKeyUp={(e) => {
-                this.updateTitle(e.target.value);
-              }}
-            />
-            <Button className={classes.newNoteSubmitBtn} onClick={this.newNote}>
-              Submit Note
-            </Button>
-          </div>
-        ) : null}
+import { makeStyles } from "@material-ui/styles";
+import Drawer from "@material-ui/core/Drawer";
+import ListSubheader from "@material-ui/core/ListSubheader";
 
-        <List>
-          {notes.map((_note, _index) => {
-            return (
-              <div key={_index}>
-                <SidebarItem
-                  _note={_note}
-                  _index={_index}
-                  selectedNoteIndex={selectedNoteIndex}
-                  selectNote={this.selectNote}
-                  deleteNote={this.deleteNote}
-                />
-                <Divider></Divider>
-              </div>
-            );
-          })}
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Collapse from "@material-ui/core/Collapse";
+import AddCircleOutlineRoundedIcon from "@material-ui/icons/AddCircleOutlineRounded";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import NotesIcon from "@material-ui/icons/Notes";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import TextField from "@material-ui/core/TextField";
+import SidebarItem from "../sidebar-item/sidebar-item.comp";
+const drawerWidth = 240;
+const useStyles = makeStyles({
+  sidebarWrapper: {
+    // width: "20%",
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  addNoteBtn: {
+    borderRadius: 0,
+    width: "100%",
+  },
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    // backgroundColor: theme.palette.background.paper,
+  },
+  nested: {
+    paddingLeft: "20px",
+  },
+  inputField: {
+    width: "100%",
+  },
+});
+// import SidebarItemComponent from '../sidebaritem/sidebarItem';
+const Sidebar = ({
+  notes,
+  selectedNote,
+  selectedNoteIndex,
+  onSelect,
+  onDelete,
+}) => {
+  const classes = useStyles();
+  const [open, setOpen] = useState(true);
+  const [addingNotes, setAddingNotes] = useState(false);
+  const [title, setTitle] = useState(null);
+  // event handler for drop down from material ui
+  const handleClick = () => {
+    setOpen(!open);
+  };
+  //////////////////////////////
+  const selectNote = (n, i) => {
+    console.log("select Note");
+    onSelect(n, i);
+  };
+  const deleteNote = (i) => {
+    console.log("delete Note", i);
+    onDelete(i);
+  };
+  return (
+    <div>
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        anchor="left"
+      >
+        <List
+          component="nav"
+          aria-labelledby="nested-list-subheader"
+          subheader={
+            <ListSubheader component="div" id="nested-list-subheader">
+              Nested List Items
+            </ListSubheader>
+          }
+          className={classes.root}
+        >
+          <ListItem button onClick={handleClick}>
+            <ListItemIcon>
+              <NotesIcon />
+            </ListItemIcon>
+            <ListItemText primary="Notes" />
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem
+                onClick={() => {
+                  setAddingNotes(!addingNotes);
+                  setTitle(null);
+                }}
+                button
+                className={classes.nested}
+              >
+                <ListItemIcon>
+                  <AddCircleOutlineRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary={addingNotes ? "Cancle" : "Add Note"} />
+              </ListItem>
+              {addingNotes ? (
+                <div>
+                  <TextField
+                    className={classes.inputField}
+                    id="standard-basic"
+                    label=" Add title"
+                    // placeholder="Add title"
+                    onKeyUp={(e) => {
+                      setTitle(e.target.value);
+                    }}
+                  />
+
+                  <Button
+                    className={classes.addNoteBtn}
+                    variant="contained"
+                    disableElevation
+                  >
+                    Submit
+                  </Button>
+                </div>
+              ) : null}
+              {/* list items  */}
+              {notes.map((_note, _index) => {
+                return (
+                  <ListItem key={_index} button className={classes.nested}>
+                    <SidebarItem
+                      _note={_note}
+                      _index={_index}
+                      selectedNoteIndex={selectedNoteIndex}
+                      selectNote={selectNote}
+                      deleteNote={deleteNote}
+                    />
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Collapse>
         </List>
-      </div>
-    );
-  }
-  newNoteBtnClick = () => {
-    this.setState({ title: null, addingNote: !this.state.addingNote });
-    console.log("NEW NOTES !");
-  };
-  updateTitle = (txt) => {
-    this.setState({ title: txt });
-  };
-  newNote = () => {
-    console.log(this.state);
-  };
-  selectNote = () => console.log("selectNote");
-  deleteNote = () => console.log("deleteNote");
-}
-export default withStyles(styles)(Sidebar);
+
+        {/* <Button
+          className={classes.addNoteBtn}
+          variant="contained"
+          color="primary"
+        >
+          Add note
+        </Button> */}
+      </Drawer>
+    </div>
+  );
+};
+export default Sidebar;

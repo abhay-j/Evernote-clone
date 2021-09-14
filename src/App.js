@@ -1,29 +1,22 @@
 import "./App.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "./firebase";
 import Sidebar from "./components/sidebar/sidebar.comp";
 import Editor from "./components/editor/editor.comp";
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedNoteIndex: null,
-      selectedNote: null,
-      notes: [],
-    };
-  }
-  render() {
-    return (
-      <div className="app-container">
-        <Sidebar
-          selectedNoteIndex={this.state.selectedNoteIndex}
-          notes={this.state.notes}
-        />
-        <Editor />
-      </div>
-    );
-  }
-  componentDidMount() {
+import { makeStyles } from "@material-ui/styles";
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    // backgroundColor: "red",
+    height: "100%",
+  },
+});
+const App = () => {
+  const classes = useStyles();
+  const [notes, setNotes] = useState([]);
+  const [selectedNoteIndex, setSelectedNoteIndex] = useState(null);
+  const [selectedNote, setSelectedNote] = useState(null);
+  useEffect(() => {
     firebase
       .firestore()
       .collection("notes")
@@ -35,9 +28,43 @@ class App extends React.Component {
           return data;
         });
         console.log(notes);
-        this.setState({ notes: notes });
+        setNotes(notes);
       });
-  }
-}
+  }, []);
+  const selectNote = (note, index) => {
+    setSelectedNoteIndex(index);
+    setSelectedNote(note);
+  };
+  const deleteNote = (index) => {};
+  const noteUpdate = (id, title, text) => {
+    // console.log("id:", id);
+    firebase.firestore().collection("notes").doc(id).update({
+      title: title,
+      body: text,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+  };
+  return (
+    <div className={classes.root}>
+      {/* <div className={classes.sidebarWrapper}> */}
+      <Sidebar
+        notes={notes}
+        selectedNote={selectedNote}
+        selectedNoteIndex={selectedNoteIndex}
+        onSelect={selectNote}
+        onDelete={deleteNote}
+      ></Sidebar>
+      {/* </div> */}
+      {selectedNote ? (
+        <Editor
+          selectedNote={selectedNote}
+          selectedNoteIndex={selectedNoteIndex}
+          notes={notes}
+          noteUpdate={noteUpdate}
+        ></Editor>
+      ) : null}
+    </div>
+  );
+};
 
 export default App;
