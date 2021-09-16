@@ -4,7 +4,6 @@ import firebase from "./firebase";
 import Sidebar from "./components/sidebar/sidebar.comp";
 import Editor from "./components/editor/editor.comp";
 import { makeStyles } from "@material-ui/styles";
-import { ContactsOutlined } from "@material-ui/icons";
 import { v4 as uuidv4 } from "uuid";
 const useStyles = makeStyles({
   root: {
@@ -98,7 +97,6 @@ const App = () => {
       uniqueId: note.uid,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    const newId = fromDb;
 
     setNotes((prev) => {
       return [...prev, note];

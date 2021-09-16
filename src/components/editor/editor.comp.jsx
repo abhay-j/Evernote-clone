@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
-import debounce from "../../helpers";
 
 import { makeStyles } from "@material-ui/core";
-import { TimeToLeave } from "@material-ui/icons";
+
 //
 const useStyles = makeStyles({
   editorContainer: {

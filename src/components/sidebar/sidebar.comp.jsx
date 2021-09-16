@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import List from "@material-ui/core/List";
-import { Divider, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import Drawer from "@material-ui/core/Drawer";
 import ListSubheader from "@material-ui/core/ListSubheader";
