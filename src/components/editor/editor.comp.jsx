@@ -32,11 +32,11 @@ const Editor = ({ selectedNote, selectedNoteIndex, notes, noteUpdate }) => {
   // const update = useRef(
   //   debounce(() => {
   //     console.log("updating database!");
-  //     // const noteObj = {
-  //     //   title: title,
-  //     //   body: text,
-  //     // };
-  //     noteUpdate(id, title, text);
+  //     try {
+  //       noteUpdate(id, title, text);
+  //     } catch (error) {
+  //       console.log("this is the error", error);
+  //     }
   //   }, 1500)
   // ).current;
 

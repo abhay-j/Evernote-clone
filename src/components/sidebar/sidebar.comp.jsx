@@ -51,6 +51,7 @@ const Sidebar = ({
   selectedNoteIndex,
   onSelect,
   onDelete,
+  addNote,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(true);
@@ -65,9 +66,15 @@ const Sidebar = ({
     console.log("select Note");
     onSelect(n, i);
   };
-  const deleteNote = (i) => {
-    console.log("delete Note", i);
-    onDelete(i);
+  const deleteNote = (n) => {
+    console.log("delete Note", n);
+    onDelete(n);
+  };
+  const newNote = () => {
+    console.log(title);
+    addNote(title);
+    setTitle(null);
+    setAddingNotes(false);
   };
   return (
     <div>
@@ -127,6 +134,7 @@ const Sidebar = ({
                     className={classes.addNoteBtn}
                     variant="contained"
                     disableElevation
+                    onClick={newNote}
                   >
                     Submit
                   </Button>

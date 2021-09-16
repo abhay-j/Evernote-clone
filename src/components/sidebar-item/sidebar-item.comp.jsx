@@ -38,7 +38,7 @@ const SidebarItem = ({
   };
   const handleDelete = () => {
     if (window.confirm(`are you sure you want to delete`)) {
-      deleteNote(_index);
+      deleteNote(_note);
     }
   };
   return (
