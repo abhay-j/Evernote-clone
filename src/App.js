@@ -91,7 +91,7 @@ const App = () => {
       uid: uid,
     };
     console.log(note);
-    const fromDb = await firebase.firestore().collection("notes").add({
+    await firebase.firestore().collection("notes").add({
       title: note.title,
       body: note.body,
       uniqueId: note.uid,
