@@ -5,7 +5,7 @@ import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import Drawer from "@material-ui/core/Drawer";
 import ListSubheader from "@material-ui/core/ListSubheader";
-
+import { Link } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -91,7 +91,7 @@ const Sidebar = ({
           aria-labelledby="nested-list-subheader"
           subheader={
             <ListSubheader component="div" id="nested-list-subheader">
-              Nested List Items
+              <Link to="/todo">See Todo Lists</Link>
             </ListSubheader>
           }
           className={classes.root}
